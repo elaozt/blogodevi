@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${blogName}">Benim Blogum</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="top"><a class="brand" href="/" th:text="${blogName}">Benim Blogum</a>
+    <nav><a href="/login">Sahip girişi</a> <a class="button" href="/makale/yeni">Makale ekle</a></nav>
+</header>
+<main>
+    <h1>Makaleler</h1>
+    <p class="notice" th:if="${message}" th:text="${message}"></p>
+    <article class="card" th:each="article : ${articles}">
+        <h2 th:text="${article.title}">Makale başlığı</h2>
+        <time th:text="${#temporals.format(article.createdAt, 'dd.MM.yyyy HH:mm')}"></time>
+        <p class="content" th:text="${article.content}"></p>
+    </article>
+    <p th:if="${#lists.isEmpty(articles)}" class="muted">Henüz makale eklenmemiş.</p>
+</main>
+</body>
+</html>
