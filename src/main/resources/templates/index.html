@@ -8,7 +8,14 @@
 </head>
 <body>
 <header class="top"><a class="brand" href="/" th:text="${blogName}">Benim Blogum</a>
-    <nav><a href="/login">Sahip girişi</a> <a class="button" href="/makale/yeni">Makale ekle</a></nav>
+    <nav>
+        <a href="/login" th:if="${!loggedIn}">Giriş yap</a>
+        <a href="/register" th:if="${!loggedIn}">Kayıt ol</a>
+        <form th:if="${loggedIn}" method="post" th:action="@{/logout}" style="display:inline">
+            <button type="submit">Çıkış yap</button>
+        </form>
+        <a class="button" href="/makale/yeni" th:if="${isOwner}">Makale ekle</a>
+    </nav>
 </header>
 <main>
     <h1>Makaleler</h1>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hesap oluştur</title><link rel="stylesheet" href="/css/style.css">
+</head>
+<body><main class="form-page">
+    <a href="/">← Bloga dön</a><h1>Hesap oluştur</h1>
+    <p class="muted">Kayıt olan kişiler makaleleri okuyabilir. Makale ekleme yalnızca blog sahibine açıktır.</p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+    <form method="post" th:action="@{/register}">
+        <label>Kullanıcı adı<input name="username" minlength="3" maxlength="60" required></label>
+        <label>Şifre<input name="password" type="password" minlength="8" required></label>
+        <button type="submit">Kayıt ol</button>
+    </form>
+    <p>Zaten hesabın var mı? <a href="/login">Giriş yap</a></p>
+</main></body>
+</html>
