@@ -1,36 +1,47 @@
-# Blog Ödevi — IntelliJ IDEA + DataGrip
+# Blog Ödevi (Laravel + MySQL)
+
+Kullanıcıların okuyucu hesabı oluşturabildiği kişisel blog. Kayıt olan hesaplar makaleleri okuyabilir; makale yayımlama yalnızca blog sahibine açıktır.
 
 ## Gerekenler
-- JDK 17 veya üzeri
-- IntelliJ IDEA
-- MySQL Server (DataGrip tek başına sunucu değildir)
-- MySQL'e bağlanacak DataGrip bağlantısı
 
-## 1. DataGrip'te veritabanını oluştur
-MySQL bağlantısını aç, sorgu konsoluna aşağıdaki komutu yaz ve `Ctrl+Enter` ile çalıştır:
+- PHP 8.3 veya üzeri
+- Composer 2
+- MySQL Server
+- DataGrip (MySQL veritabanını yönetmek için)
+
+## DataGrip'te veritabanını oluştur
+
+MySQL bağlantısını açıp sorgu konsolunda şu SQL'i çalıştır:
 
 ```sql
 CREATE DATABASE kisisel_blog CHARACTER SET utf8mb4 COLLATE utf8mb4_turkish_ci;
 ```
 
-Ardından Database Explorer'da bağlantıya sağ tıkla, **Refresh** yap ve `kisisel_blog` şemasını seç.
+## Projeyi çalıştır
 
-## 2. IntelliJ IDEA'da projeyi aç ve çalıştır
-1. IntelliJ'de **File → Open** seçip bu `blogodevi` klasörünü aç. `pom.xml` proje kökünde olmalı.
-2. Maven yüklemesi isterse **Load/Sync** düğmesine bas ve tamamlanmasını bekle. İlk yüklemede internet gerekir.
-3. `src/main/resources/application.example.properties` dosyasını kopyalayıp kopyanın adını `application.properties` yap. Yeni dosyada `MYSQL_PAROLANI_BURAYA_YAZ` yazan yeri kendi MySQL parolanla değiştir. `application.properties` GitHub'a gönderilmez; parolan gizli kalır.
-4. `src/main/java/com/ornek/blog/BlogApplication.java` dosyasını aç ve yeşil ▶ simgesine bas.
-5. Tarayıcıda http://localhost:8080 adresini aç.
+Proje klasöründe terminal aç ve sırasıyla çalıştır:
 
-İlk açılışta makaleler için tablo otomatik oluşturulur. DataGrip'te `kisisel_blog` şemasını Refresh edince `article` tablosunu görebilirsin.
+```powershell
+composer install
+Copy-Item .env.example .env
+php artisan key:generate
+```
 
-## Sahip hesabı
-- Kullanıcı adı: `sahibi`
-- Şifre: `blog1234`
+`.env` dosyasında `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` ve `DB_PASSWORD` değerlerini kendi MySQL bilgilerine göre düzenle. Bu dosya GitHub'a yüklenmez. Sahip hesabı için `BLOG_OWNER_USERNAME` ve `BLOG_OWNER_PASSWORD` değerlerini de ilk seferde değiştir.
 
-Blogda makaleler herkes tarafından okunabilir. Ziyaretçiler `http://localhost:8080/register` adresinden okuyucu hesabı oluşturabilir. Bu hesaplar makale ekleyemez; `/makale/yeni` sayfası yalnızca blog sahibine açıktır. Giriş için `http://localhost:8080/login` adresine git.
+Ardından:
 
-- Kullanıcı adı: `sahibi`
-- Şifre: `blog1234`
+```powershell
+php artisan migrate --seed
+php artisan serve
+```
 
-Yeni okuyucu hesapları ve parolalarının BCrypt özeti MySQL'deki `blog_user` tablosunda tutulur. Blog sahibi ilk çalıştırmada oluşturulur. Varsayılan sahip hesabı `sahibi` / `blog1234` şeklindedir. Bu proje sınıf ödevi için örnek bir başlangıçtır.
+Tarayıcıda http://127.0.0.1:8000 adresini aç. `migrate --seed` tabloları oluşturur ve sahip hesabını ekler.
+
+## Hesaplar
+
+- Sahip girişi: `.env` içindeki `BLOG_OWNER_USERNAME` ve `BLOG_OWNER_PASSWORD`.
+- Diğer kişiler `/register` sayfasından kayıt olabilir. Bu hesaplar yalnızca makaleleri okuyabilir.
+- Makale oluşturma sayfası `/makale/yeni`; yalnızca sahip hesabı erişebilir.
+
+Yeni tablolar: `users` (kullanıcılar) ve `articles` (makaleler). `database/migrations` içindeki Laravel migration dosyalarıyla yönetilir.
